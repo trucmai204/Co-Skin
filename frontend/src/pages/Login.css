@@ -1,0 +1,31 @@
+/* src/components/Login.css */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto; 
+    background-color: #ffffff; 
+    
+  }
+  
+  .login-title {
+    margin-bottom: 20px;
+    color: #333; /* Màu chữ tiêu đề */
+  }
+  
+  .login-link {
+    margin-top: 10px;
+    text-decoration: none;
+    color: blue; /* Màu chữ cho link */
+  }
+  
+  .login-button {
+    background-color: #007bff; /* Màu nền cho nút đăng nhập */
+    color: white; /* Màu chữ cho nút */
+    &:hover {
+      background-color: #0056b3; /* Màu khi hover */
+    }
+  }
+  
