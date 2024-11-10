@@ -1,23 +1,21 @@
-// src/App.jsx
-import React, { useState } from 'react';
-import { Container, Paper, Tabs, Tab } from '@mui/material';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage';
+import ProductPage from './pages/ProductPage';
 
-const App = () => {
+
+function App() {
   return (
     <Router>
-      <Container component="main" maxWidth="xs">
-        <Paper elevation={3} style={{ padding: '20px' }}>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </Paper>
-      </Container>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/product/:id" element={<ProductPage />} />
+        
+      </Routes>
     </Router>
   );
-};
+}
 
 export default App;
