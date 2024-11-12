@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 function ProductList() {
   const [products, setProducts] = useState([]);
+  
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/products')
@@ -13,11 +14,20 @@ function ProductList() {
       .catch((error) => console.error('Error fetching products:', error));
   }, []);
 
-  const handleAddToCart = (product) => {
-    console.log('Add to cart:', product);
-    // Đây là nơi bạn xử lý việc thêm sản phẩm vào giỏ hàng
-    // Ví dụ: gọi API hoặc cập nhật trạng thái giỏ hàng
-  };
+  const handleAddToCart = async (productId, quantity, price) => {
+    try {
+      const userId = localStorage.getItem("userId");
+        const response = await axios.post(`http://localhost:5000/api/cart/${userId}/add`, {
+            ProductID: productId,
+            Quantity: quantity,
+            Price: price
+        });
+        console.log("Sản phẩm đã được thêm vào giỏ hàng:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Lỗi khi thêm sản phẩm:", error);
+    }
+};
 
   const handleBuyNow = (product) => {
     console.log('Buy now:', product);

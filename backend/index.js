@@ -5,6 +5,7 @@ const cors = require('cors'); // Import cors
 const userRoutes = require('./routes/UserRoutes.js');
 const productRoutes = require('./routes/ProductRoutes.js');
 const categoryRoutes = require('./routes/CategoryRoutes.js');
+const cartRoutes = require('./routes/CartRoutes.js');
 
 // Nạp biến môi trường từ file .env
 dotenv.config();
@@ -30,6 +31,7 @@ app.use(cors()); // Kích hoạt cors cho tất cả các yêu cầu
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/carts', cartRoutes);
 
 // Khởi động server
 app.listen(PORT, () => {
