@@ -63,8 +63,8 @@ router.post('/login', async (req, res) => {
         }
 
         // Nếu đăng nhập thành công
-        const { _id, Username, Role } = user;
-        res.json({ message: 'Đăng nhập thành công', _id, Username, Role });
+        const { UserID, Username, Role } = user;
+        res.json({ message: 'Đăng nhập thành công', UserID, Username, Role });
     } catch (error) {
         console.error('Lỗi đăng nhập:', error);
         res.status(500).json({ message: 'Đã xảy ra lỗi khi đăng nhập.' });

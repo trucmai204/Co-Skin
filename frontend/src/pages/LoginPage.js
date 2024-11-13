@@ -13,14 +13,18 @@ function LoginPage({ onLogin }) {
     try {
       // Gọi API để xác thực người dùng
       const response = await axios.post("http://localhost:5000/api/users/login", { Email: username, Password: password });
-
+      
       // Kiểm tra phản hồi từ API
       if (response.status === 200) {
-        const userId = response.data.userId; 
-        localStorage.setItem("userId", userId); 
-
-        onLogin();
-        navigate("/"); 
+        const userId = response.data.UserID; 
+        console.log('UserId:', userId); // Thêm log này để kiểm tra giá trị của userId
+        if (userId) { // Kiểm tra xem userId có giá trị không
+          localStorage.setItem("userId", userId); 
+          onLogin();
+          navigate("/"); 
+        } else {
+          console.error('UserId không được trả về từ API');
+        }
       }
     } catch (error) {
       setError("Tên người dùng hoặc mật khẩu không đúng!");

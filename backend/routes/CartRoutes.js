@@ -17,8 +17,12 @@ router.get('/:userId', async (req, res) => {
 });
 
 // API: Thêm sản phẩm vào giỏ hàng
-router.post('/:userId/add', async (req, res) => {
+router.post('/add/:userId', async (req, res) => {
+    console.log('Req body:', req.body);
+    console.log('UserID:', req.params.userId);
+
     try {
+
         const { ProductID, Quantity, Price } = req.body;
         let cart = await Cart.findOne({ UserID: req.params.userId });
 

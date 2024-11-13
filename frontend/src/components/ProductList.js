@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 function ProductList() {
   const [products, setProducts] = useState([]);
-  
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/products')
@@ -14,32 +14,36 @@ function ProductList() {
       .catch((error) => console.error('Error fetching products:', error));
   }, []);
 
-  const handleAddToCart = async (productId, quantity, price) => {
+  const handleAddToCart = async (product) => {
     try {
-      const userId = localStorage.getItem("userId");
-        const response = await axios.post(`http://localhost:5000/api/cart/${userId}/add`, {
-            ProductID: productId,
-            Quantity: quantity,
-            Price: price
-        });
-        console.log("Sản phẩm đã được thêm vào giỏ hàng:", response.data);
-        return response.data;
+      const userId = localStorage.getItem('userId');
+      const response = await axios.post(`http://localhost:5000/api/carts/add/${userId}`, {
+        ProductID: product.ProductID,
+        Quantity: 1,
+        Price: product.Price,
+      });
+  
+      if (response.status === 200) {
+        console.log('Sản phẩm đã được thêm vào giỏ hàng');
+      }
     } catch (error) {
-        console.error("Lỗi khi thêm sản phẩm:", error);
+      console.error('Lỗi thêm sản phẩm vào giỏ hàng:', error);
     }
-};
+  };
+  
+  
 
   const handleBuyNow = (product) => {
-    console.log('Buy now:', product);
-    // Xử lý mua ngay (ví dụ: chuyển đến trang thanh toán)
+    console.log('Mua ngay:', product);
+    // Xử lý chuyển đến trang thanh toán hoặc các bước tiếp theo
   };
 
   return (
     <Grid 
       container 
       spacing={3} 
-      justifyContent="center" // Căn giữa các sản phẩm
-      style={{ padding: '40px' }} // Tăng padding cho container
+      justifyContent="center"
+      style={{ padding: '40px' }}
     >
       {products.map((product) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={product.ProductID}>
@@ -56,7 +60,7 @@ function ProductList() {
                   {product.ProductName}
                 </Typography>
                 <Typography variant="body1" color="text.primary">
-                  Price: {product.Price.toLocaleString('vi-VN')} VND
+                  Giá: {product.Price.toLocaleString('vi-VN')} VND
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {product.Description}
@@ -66,15 +70,15 @@ function ProductList() {
 
             {/* Thêm icon giỏ hàng và nút mua hàng ngay */}
             <div style={{ padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <IconButton 
-                color="#FFB6C1" 
-                onClick={() => handleAddToCart(product)}
+              <IconButton
+                sx={{ color: '#FFB6C1' }} 
+                onClick={() => handleAddToCart(product)} // Sử dụng giá trị sản phẩm và số lượng
               >
                 <ShoppingCartIcon />
               </IconButton>
               <Button 
                 variant="contained" 
-                color="#FFB6C1" 
+                sx={{ backgroundColor: '#FFB6C1' }} 
                 onClick={() => handleBuyNow(product)}
               >
                 Mua hàng ngay
