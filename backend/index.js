@@ -6,6 +6,9 @@ const userRoutes = require('./routes/UserRoutes.js');
 const productRoutes = require('./routes/ProductRoutes.js');
 const categoryRoutes = require('./routes/CategoryRoutes.js');
 const cartRoutes = require('./routes/CartRoutes.js');
+const vnpay = require('./routes/VNPay.js')
+
+
 
 // Nạp biến môi trường từ file .env
 dotenv.config();
@@ -27,6 +30,7 @@ app.use(express.json());
 // Sử dụng middleware cors
 app.use(cors()); // Kích hoạt cors cho tất cả các yêu cầu
 
+app.use('${api}/vnpay', vnpay)
 // Route 
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);

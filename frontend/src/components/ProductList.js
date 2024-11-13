@@ -3,10 +3,10 @@ import axios from 'axios';
 import { Grid, Card, CardContent, CardMedia, Typography, CardActionArea, IconButton, Button } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function ProductList() {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/products')
@@ -24,13 +24,12 @@ function ProductList() {
       });
   
       if (response.status === 200) {
-        console.log('Sản phẩm đã được thêm vào giỏ hàng');
+        toast.success('Sản phẩm đã được thêm vào giỏ hàng!');
       }
     } catch (error) {
       console.error('Lỗi thêm sản phẩm vào giỏ hàng:', error);
     }
   };
-  
   
 
   const handleBuyNow = (product) => {

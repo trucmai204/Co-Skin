@@ -6,6 +6,8 @@ import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import Login from './pages/LoginPage';
 import { useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,6 +15,7 @@ function App() {
   return (
     <Router>
       {isLoggedIn && <Navbar />}
+      <ToastContainer />
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/" element={<HomePage />} />
