@@ -17,7 +17,7 @@ function App() {
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/product/:id" element={<ProductPage />} />
-        <Route path="/cart/:userId" element={<CartPage />} />
+        <Route path="/cart" element={<CartPage />} />
         
       </Routes>
     </Router>
