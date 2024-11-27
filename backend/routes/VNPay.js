@@ -49,4 +49,4 @@ router.post("/create_payment_url", function (req, res, next) {
   res.send(vnpUrl);
 });
 
-exports = module.exports = router;
+module.exports = router;

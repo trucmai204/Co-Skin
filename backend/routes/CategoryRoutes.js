@@ -12,7 +12,19 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
+router.get("/:categoryId", async (req, res) => {
+  try {
+    const categoryId = req.params.categoryId;  
+    const products = await Category.find({ CategoryID: categoryId }); 
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Không có sản phẩm trong danh mục này." });
+    }
+    res.json(products);
+  } catch (error) {
+    console.error("Lỗi khi lấy sản phẩm:", error);
+    res.status(500).json({ message: "Lỗi khi lấy sản phẩm theo danh mục", error: error.message });
+  }
+});
 // Thêm loại sản phẩm mới
 router.post("/add", async (req, res) => {
   try {

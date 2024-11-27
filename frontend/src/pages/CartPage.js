@@ -67,34 +67,26 @@ const CartPage = () => {
     }
   };
   async function handleCheckout() {
-    try {
-      // Tính tổng tiền của các sản phẩm đã chọn
+    /*try {
       const total = totalMoney(selectedProducts);
-    
-      // Tạo một đối tượng mới đại diện cho thông tin thanh toán
       const newPayment = {
-        products: selectedProducts, // Danh sách sản phẩm
-        amount: total, // Tổng tiền
-        bankCode: null, // Mã ngân hàng (hiện chưa được sử dụng)
-        language: "vn", // Ngôn ngữ (tiếng Việt)
+        products: selectedProducts,
+        amount: total,
+        bankCode: null,
+        language: "vn",
       };
-    
-      // Gửi yêu cầu POST đến API để tạo URL thanh toán
       const response = await axios.post(
-        "http://localhost:8080/api/v1/vnpay/create_payment_url",
+        "http://localhost:8888/api/v1/vnpay/create_payment_url",
         newPayment
       );
-    
-      // Kiểm tra xem yêu cầu có thành công không
       if (response.status === 200 && response.data) {
-        // Nếu thành công, chuyển hướng đến URL thanh toán
         window.location.href = response.data;
       }
     } catch (error) {
-      // Nếu có lỗi xảy ra, hiển thị thông báo lỗi
-      alert("Lỗi: " + error?.message);
-    }
+      alert(`Lỗi: ${error?.message}`);
+    }*/
   };
+
   if (!cart) {
     return <div>Loading cart...</div>;
   }

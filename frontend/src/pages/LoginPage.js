@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
 import axios from "axios";
 
@@ -73,6 +73,13 @@ function LoginPage({ onLogin }) {
       >
         Đăng nhập
       </Button>
+      {/* Thêm liên kết đến trang đăng ký */}
+      <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+        Bạn chưa có tài khoản?{" "}
+        <Link to="/register" style={{ color: "#FF69B4", textDecoration: "none", fontWeight: "bold" }}>
+          Đăng ký ngay
+        </Link>
+      </Typography>
     </Container>
   );
 }

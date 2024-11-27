@@ -5,9 +5,9 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-function ProductList() {
+function ProductList({ setCartCount }) {
   const [products, setProducts] = useState([]);
-
+  
   useEffect(() => {
     axios.get('http://localhost:5000/api/products')
       .then((response) => setProducts(response.data))
@@ -25,16 +25,15 @@ function ProductList() {
   
       if (response.status === 200) {
         toast.success('Sản phẩm đã được thêm vào giỏ hàng!');
+        setCartCount((prevCount) => prevCount + 1); // Tăng số lượng giỏ hàng
       }
     } catch (error) {
       console.error('Lỗi thêm sản phẩm vào giỏ hàng:', error);
     }
   };
-  
 
   const handleBuyNow = (product) => {
     console.log('Mua ngay:', product);
-    // Xử lý chuyển đến trang thanh toán hoặc các bước tiếp theo
   };
 
   return (
@@ -43,6 +42,7 @@ function ProductList() {
       spacing={3} 
       justifyContent="center"
       style={{ padding: '40px' }}
+      marginTop={'25px'}
     >
       {products.map((product) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={product.ProductID}>
@@ -67,18 +67,17 @@ function ProductList() {
               </CardContent>
             </CardActionArea>
 
-            {/* Thêm icon giỏ hàng và nút mua hàng ngay */}
             <div style={{ padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <IconButton
                 sx={{ color: '#FFB6C1' }} 
-                onClick={() => handleAddToCart(product)} // Sử dụng giá trị sản phẩm và số lượng
+                onClick={() => handleAddToCart(product)}
               >
                 <ShoppingCartIcon />
               </IconButton>
               <Button 
                 variant="contained" 
                 sx={{ backgroundColor: '#FFB6C1' }} 
-                onClick={() => handleBuyNow(product)}
+                onClick={() => handleBuyNow(product)}  
               >
                 Mua hàng ngay
               </Button>

@@ -61,18 +61,22 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+// Lấy sản phẩm theo categoryId
+router.get("/category/:categoryId", async (req, res) => {
   try {
-    const productId = parseInt(req.params.id); // Chuyển đổi id thành số nguyên
-    const product = await Product.findOne({ ProductID: productId });
+    const categoryId = req.params.categoryId;  // Lấy CategoryID từ URL
+    const products = await Product.find({ CategoryID: categoryId });  // Tìm sản phẩm theo CategoryID
 
-    if (product) {
-      res.json(product);
-    } else {
-      res.status(404).json({ message: 'Product not found' });
+    // Kiểm tra nếu không có sản phẩm nào
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Không có sản phẩm trong danh mục này." });
     }
+
+    // Trả về danh sách sản phẩm
+    res.json(products);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error("Lỗi khi lấy sản phẩm:", error);
+    res.status(500).json({ message: "Lỗi khi lấy sản phẩm theo danh mục", error: error.message });
   }
 });
 
