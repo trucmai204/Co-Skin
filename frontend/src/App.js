@@ -39,7 +39,7 @@ function App() {
             path="/"
             element={
               <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <HomePage />
+                <HomePage setCartCount={setCartCount} cartCount={cartCount} />
               </ProtectedRoute>
             }
           />
@@ -79,7 +79,7 @@ function App() {
             path="/category/:id"
             element={
               <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <CategoryPage />
+                <CategoryPage setCartCount={setCartCount} />
               </ProtectedRoute>
             }
           />
@@ -95,7 +95,7 @@ function App() {
             path="/search-products"
             element={
               <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <SearchPage />
+                <SearchPage setCartCount={setCartCount} />
               </ProtectedRoute>
             }
           />

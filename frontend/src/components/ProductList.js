@@ -11,7 +11,6 @@ import {
   Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ProductActions from "./ProductAction";
@@ -72,10 +71,10 @@ function ProductList({ setCartCount }) {
                 height="200"
                 image={product.ImageURL}
                 alt={product.ProductName}
-                style={{ objectFit: "cover", objectPosition: "center" }}
+                style={{ objectFit: "contain", objectPosition: "center" }}
               />
-              <CardContent style={{ flexGrow: 1, textAlign: "center" }}>
-                <Typography variant="h7" gutterBottom>
+              <CardContent style={{ flexGrow: 1, textAlign: "center", paddingnBottom: "0rem" }}>
+                <Typography variant="h7">
                   {product.ProductName}
                 </Typography>
                 <Typography variant="body2" color="text.primary">

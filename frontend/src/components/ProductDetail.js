@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Typography, Container, Box, Divider } from '@mui/material';
+import ProductActions from "./ProductAction";
 
-function ProductDetail() {
+function ProductDetail({ setCartCount }) {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
 
@@ -16,12 +17,11 @@ function ProductDetail() {
   if (!product) return <Typography>Loading...</Typography>;
 
   return (
-    <Container maxWidth="md" style={{ marginTop: '20px' }}>
+    <Container maxWidth="lg" style={{ marginTop: '5rem' }}>
       <Box
         display="flex"
         flexDirection={{ xs: 'column', md: 'row' }} // Cột trên thiết bị nhỏ và hàng ngang trên thiết bị lớn
         boxShadow={3}
-        padding="20px"
         borderRadius="8px"
         bgcolor="#fff"
       >
@@ -49,8 +49,9 @@ function ProductDetail() {
           <Divider style={{ margin: '10px 0' }} />
 
           <Typography variant="h6" color="primary" gutterBottom>
-            Price: {product.Price.toLocaleString('vi-VN')} VND
+            Giá tiền: {product.Price.toLocaleString('vi-VN')} VND
           </Typography>
+          <ProductActions product={product} setCartCount={setCartCount} />
 
           <Divider style={{ margin: '10px 0' }} />
 
@@ -58,6 +59,7 @@ function ProductDetail() {
             {product.Description}
           </Typography>
         </Box>
+        
       </Box>
     </Container>
   );

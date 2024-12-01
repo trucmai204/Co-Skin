@@ -1,6 +1,6 @@
 import React from "react";
 import { IconButton, Button } from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AddShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -36,22 +36,21 @@ function ProductActions({ product, setCartCount }) {
       style={{
         padding: "10px",
         display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
+        alignItems: "right",
       }}
     >
       <IconButton
         sx={{ color: "#fb6f92" }}
         onClick={handleAddToCart}
       >
-        <ShoppingCartIcon />
+        <AddShoppingCartIcon />
       </IconButton>
       <Button
-        variant="contained"
-        sx={{ backgroundColor: "#fb6f92" }}
+        variant="outlined"
+        sx={{ color: "#fb6f92", borderColor: "#fb6f92", marginLeft: "5rem" }}
         onClick={handleBuyNow}
       >
-        Mua hàng ngay
+        Mua ngay
       </Button>
     </div>
   );

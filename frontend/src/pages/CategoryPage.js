@@ -8,8 +8,6 @@ import {
   CardMedia,
   Typography,
   CardActionArea,
-  Button,
-  IconButton,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ProductActions from "../components/ProductAction";

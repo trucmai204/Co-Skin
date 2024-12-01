@@ -30,7 +30,6 @@ function SearchPage({ setCartCount }) {
               height: "100%",
               display: "flex",
               flexDirection: "column",
-              objectFit: "cover", objectPosition: "center"
             }}>
             <CardActionArea onClick={() => navigate(`/product/${product.ProductID}`)}>
               <CardMedia

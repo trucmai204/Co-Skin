@@ -8,12 +8,13 @@ function Navbar() {
                 sx={{
                     display: 'flex',
                     justifyContent: 'space-around',
-                    color: '#C71585' 
+                    color: 'white', 
                 }}
             >
                 <Button color="inherit" component={Link} to="/admin/management">Co-Skin</Button>
                 <Button color="inherit" component={Link} to="/products">Quản lý Sản phẩm</Button>
                 <Button color="inherit" component={Link} to="/categories">Quản lý Danh mục</Button>
+                <Button color="inherit" component={Link} to="">Quản lý Đơn Hàng</Button>
             </Toolbar>
         </AppBar>
     );
