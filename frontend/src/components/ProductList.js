@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 function ProductList({ setCartCount }) {
   const [products, setProducts] = useState([]);
+  const [isSearchActive, setIsSearchActive] = useState(false);
   
   useEffect(() => {
     axios.get('http://localhost:5000/api/products')
@@ -42,7 +43,7 @@ function ProductList({ setCartCount }) {
       spacing={3} 
       justifyContent="center"
       style={{ padding: '40px' }}
-      marginTop={'25px'}
+      marginTop={'50px'}
     >
       {products.map((product) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={product.ProductID}>

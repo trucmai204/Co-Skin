@@ -12,6 +12,8 @@ import CategoryProductsPage from "./pages/CategoryProductsPage";
 import CategoryPage from "./pages/CategoryPage";
 import CategoryList from "./components/CategoryList";
 import RegisterPage from './pages/RegisterPage';
+import Footer from "./components/Footer";
+import SearchPage from "./pages/SearchPage";
 import "./App.css";
 
 function App() {
@@ -44,6 +46,7 @@ function App() {
             element={<CategoryProductsPage />}
           />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/search-products" element={<SearchPage />} />
         </Routes>
         
       </div>

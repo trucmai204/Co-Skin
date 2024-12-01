@@ -60,6 +60,21 @@ router.post("/", async (req, res) => {
     res.status(500).json({ message: "Có lỗi xảy ra khi thêm sản phẩm" });
   }
 });
+// Lấy chi tiết 1 san pham
+router.get("/:id", async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id); // Chuyển đổi id thành số nguyên
+    const product = await Product.findOne({ ProductID: productId });
+
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ message: "Product not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 // Lấy sản phẩm theo categoryId
 router.get("/category/:categoryId", async (req, res) => {
