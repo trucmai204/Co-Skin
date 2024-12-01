@@ -1,91 +1,124 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Grid, Card, CardContent, CardMedia, Typography, CardActionArea, IconButton, Button } from '@mui/material';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  CardActionArea,
+  IconButton,
+  Button,
+} from "@mui/material";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ProductActions from "./ProductAction";
 
 function ProductList({ setCartCount }) {
   const [products, setProducts] = useState([]);
-  const [isSearchActive, setIsSearchActive] = useState(false);
-  
-  useEffect(() => {
-    axios.get('http://localhost:5000/api/products')
-      .then((response) => setProducts(response.data))
-      .catch((error) => console.error('Error fetching products:', error));
-  }, []);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const productsPerPage = 16;
 
-  const handleAddToCart = async (product) => {
-    try {
-      const userId = localStorage.getItem('userId');
-      const response = await axios.post(`http://localhost:5000/api/carts/add/${userId}`, {
-        ProductID: product.ProductID,
-        Quantity: 1,
-        Price: product.Price,
-      });
-  
-      if (response.status === 200) {
-        toast.success('Sản phẩm đã được thêm vào giỏ hàng!');
-        setCartCount((prevCount) => prevCount + 1); // Tăng số lượng giỏ hàng
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/products/page?page=${currentPage}&limit=${productsPerPage}`
+        );
+        setProducts(response.data.products);
+        setTotalPages(response.data.totalPages); // Backend cần trả về tổng số trang
+      } catch (error) {
+        console.error("Error fetching products:", error);
       }
-    } catch (error) {
-      console.error('Lỗi thêm sản phẩm vào giỏ hàng:', error);
+    };
+
+    fetchProducts();
+  }, [currentPage]);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
     }
   };
 
-  const handleBuyNow = (product) => {
-    console.log('Mua ngay:', product);
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
   };
 
   return (
-    <Grid 
-      container 
-      spacing={3} 
+    <Grid
+      container
+      spacing={3}
       justifyContent="center"
-      style={{ padding: '40px' }}
-      marginTop={'50px'}
+      style={{ padding: "40px" }}
+      marginTop={"50px"}
     >
       {products.map((product) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={product.ProductID}>
-          <Card style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <CardActionArea component={Link} to={`/product/${product.ProductID}`}>
+          <Card
+            style={{ height: "100%", display: "flex", flexDirection: "column" }}
+          >
+            <CardActionArea
+              component={Link}
+              to={`/product/${product.ProductID}`}
+            >
               <CardMedia
                 component="img"
                 height="200"
                 image={product.ImageURL}
                 alt={product.ProductName}
+                style={{ objectFit: "cover", objectPosition: "center" }}
               />
-              <CardContent style={{ flexGrow: 1, textAlign: 'center' }}>
-                <Typography variant="h6" gutterBottom>
+              <CardContent style={{ flexGrow: 1, textAlign: "center" }}>
+                <Typography variant="h7" gutterBottom>
                   {product.ProductName}
                 </Typography>
-                <Typography variant="body1" color="text.primary">
-                  Giá: {product.Price.toLocaleString('vi-VN')} VND
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {product.Description}
+                <Typography variant="body2" color="text.primary">
+                  Giá: {product.Price.toLocaleString("vi-VN")} VND
                 </Typography>
               </CardContent>
             </CardActionArea>
 
-            <div style={{ padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <IconButton
-                sx={{ color: '#FFB6C1' }} 
-                onClick={() => handleAddToCart(product)}
-              >
-                <ShoppingCartIcon />
-              </IconButton>
-              <Button 
-                variant="contained" 
-                sx={{ backgroundColor: '#FFB6C1' }} 
-                onClick={() => handleBuyNow(product)}  
-              >
-                Mua hàng ngay
-              </Button>
-            </div>
+            {/* Tích hợp ProductActions */}
+            <ProductActions product={product} setCartCount={setCartCount} />
           </Card>
         </Grid>
       ))}
+      <div
+        style={{
+          marginTop: "20px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <IconButton
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          style={{ marginRight: "10px" }}
+          color="primary"
+        >
+          <ArrowBackIcon />
+        </IconButton>
+
+        <Typography variant="body1" style={{ margin: "0 10px" }}>
+          Trang {currentPage} / {totalPages}
+        </Typography>
+
+        <IconButton
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          style={{ marginLeft: "10px" }}
+          color="primary"
+        >
+          <ArrowForwardIcon />
+        </IconButton>
+      </div>
     </Grid>
   );
 }

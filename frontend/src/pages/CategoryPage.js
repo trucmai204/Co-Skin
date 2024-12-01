@@ -11,13 +11,15 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useNavigate } from "react-router-dom";
+import ProductActions from "../components/ProductAction";
 
-function CategoryPage() {
+function CategoryPage({ setCartCount }) {
   const { id } = useParams(); // Lấy ID của category từ URL
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("categoryId: ", id); // Log để kiểm tra categoryId
@@ -54,7 +56,7 @@ function CategoryPage() {
                   flexDirection: "column",
                 }}
               >
-                <CardActionArea>
+                <CardActionArea onClick={() => navigate(`/product/${product.ProductID}`)}>
                   <CardMedia
                     component="img"
                     height="200"
@@ -68,32 +70,10 @@ function CategoryPage() {
                     <Typography variant="body1" color="text.primary">
                       Giá: {product.Price.toLocaleString("vi-VN")} VND
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {product.Description}
-                    </Typography>
                   </CardContent>
                 </CardActionArea>
-
-                <div
-                  style={{
-                    padding: "10px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <IconButton
-                    sx={{ color: "#FFB6C1" }}
-                  >
-                    <ShoppingCartIcon />
-                  </IconButton>
-                  <Button
-                    variant="contained"
-                    sx={{ backgroundColor: "#FFB6C1" }}
-                  >
-                    Mua hàng ngay
-                  </Button>
-                </div>
+                {/* Tích hợp ProductActions */}
+                <ProductActions product={product} setCartCount={setCartCount} />
               </Card>
             </Grid>
           ))

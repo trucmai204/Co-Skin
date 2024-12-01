@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 function Navbar() {
     return (
-        <AppBar position="static" sx={{ backgroundColor: '#FFB6C1' }}> 
+        <AppBar position="static" sx={{ backgroundColor: '#fb6f92' }}> 
             <Toolbar
                 sx={{
                     display: 'flex',

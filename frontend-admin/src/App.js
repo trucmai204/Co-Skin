@@ -15,7 +15,7 @@ function App() {
         <Router>
             {isLoggedIn && <Navbar />}
             <Routes>
-                <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+                <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
                 <Route
                     path="/admin/management"
                     element={isLoggedIn ? <HomePage /> : <Navigate to="/login" />}

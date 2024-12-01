@@ -11,9 +11,9 @@ import ProductList from "./components/ProductList";
 import CategoryProductsPage from "./pages/CategoryProductsPage";
 import CategoryPage from "./pages/CategoryPage";
 import CategoryList from "./components/CategoryList";
-import RegisterPage from './pages/RegisterPage';
-import Footer from "./components/Footer";
+import RegisterPage from "./pages/RegisterPage";
 import SearchPage from "./pages/SearchPage";
+import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 import "./App.css";
 
 function App() {
@@ -28,27 +28,78 @@ function App() {
       {/* Hiển thị Navbar nếu đã đăng nhập */}
       <ToastContainer />
       <div className="content">
-        {" "}
         {/* Bọc các Routes trong div content */}
         <Routes>
+          {/* Không cần đăng nhập */}
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<RegisterPage />} />
+
+          {/* Cần đăng nhập */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/products"
-            element={<ProductList setCartCount={setCartCount} />}
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <ProductList setCartCount={setCartCount} />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/product/:id" element={<ProductPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/categories" element={<CategoryList />} />
-          <Route path="/category/:id" element={<CategoryPage />} />
+          <Route
+            path="/product/:id"
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <ProductPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/categories"
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <CategoryList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/category/:id"
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <CategoryPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/category-products/:id"
-            element={<CategoryProductsPage />}
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <CategoryProductsPage />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/search-products" element={<SearchPage />} />
+          <Route
+            path="/search-products"
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <SearchPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
-        
       </div>
     </Router>
   );

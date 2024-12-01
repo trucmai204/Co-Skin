@@ -54,7 +54,7 @@ function LoginPage({ onLogin }) {
       <Button
         variant="contained"
         sx={{
-          backgroundColor: '#FFB6C1',
+          backgroundColor: '#fb6f92',
           color: '#000',
           mt: 2,
           '&:hover': {

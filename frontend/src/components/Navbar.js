@@ -15,7 +15,6 @@ import {
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
-import SearchResults from "./SearchResults";
 
 function Navbar({ cartCount }) {
   const [products, setProducts] = useState([]);
@@ -41,6 +40,7 @@ function Navbar({ cartCount }) {
   const handleSearch = () => {
     if (!searchTerm.trim()) {
       setFilteredProducts(products);
+      console.log("Không nhập từ khóa, hiển thị tất cả sản phẩm:", products);
       return;
     }
   
@@ -53,9 +53,14 @@ function Navbar({ cartCount }) {
       );
     });
   
+    console.log("Từ khóa:", searchTerm);
+    console.log("Sản phẩm tìm thấy:", filtered);
+  
     setFilteredProducts(filtered);
-    navigate("/search-products"); // Chuyển hướng sang trang sản phẩm
+    navigate("/search-products", { state: { filteredProducts: filtered } });
   };
+  
+  
 
   return (
     <>
@@ -63,7 +68,7 @@ function Navbar({ cartCount }) {
       <AppBar
         position="fixed"
         sx={{
-          backgroundColor: "#FFB6C1",
+          backgroundColor: "#fb6f92",
           zIndex: 1000,
           top: 0,
           left: 0,
@@ -77,7 +82,7 @@ function Navbar({ cartCount }) {
             justifyContent: "space-between",
             alignItems: "center",
             padding: "0 1%",
-            color: "#C71585",
+            color: "#ffe5ec",
           }}
         >
           {/* Menu */}
@@ -100,7 +105,6 @@ function Navbar({ cartCount }) {
               alignItems: "center",
               backgroundColor: "#fff",
               borderRadius: "25px",
-              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
               overflow: "hidden",
               width: { xs: "80%", sm: "50%", md: "40%" },
             }}
@@ -133,12 +137,12 @@ function Navbar({ cartCount }) {
               variant="contained"
               onClick={handleSearch}
               sx={{
-                backgroundColor: "#FF69B4",
+                backgroundColor: "#ff8fab",
                 color: "#fff",
                 borderRadius: 0,
                 padding: "11px 20px",
                 "&:hover": {
-                  backgroundColor: "#FF1493",
+                  backgroundColor: "#ff85a3",
                 },
               }}
             >

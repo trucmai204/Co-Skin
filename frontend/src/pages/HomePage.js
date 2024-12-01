@@ -9,6 +9,7 @@ import romand from '../assets/romand.jpg';
 import srm from '../assets/srm.png';
 import kemduong from '../assets/kemduong.jpg';
 import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 function HomePage() {
 
   // Dữ liệu mẫu cho các quảng cáo
@@ -53,7 +54,7 @@ function HomePage() {
 
   return (
     <Container>
-      
+      <Navbar />
       {/* Phần quảng cáo với logo trong slider */}
       <Box sx={{ mb: 4, mt: '8%' }}>
         <Slider {...sliderSettings}>

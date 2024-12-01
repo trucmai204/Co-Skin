@@ -14,6 +14,34 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/page", async (req, res) => {
+  try {
+    // Lấy `page` và `limit` từ query string (có giá trị mặc định nếu không được cung cấp)
+    const page = parseInt(req.query.page) || 1; // Trang hiện tại
+    const limit = parseInt(req.query.limit) || 16; // Số sản phẩm mỗi trang
+    const skip = (page - 1) * limit; // Số sản phẩm cần bỏ qua
+
+    // Đếm tổng số sản phẩm
+    const totalProducts = await Product.countDocuments();
+
+    // Lấy danh sách sản phẩm cho trang hiện tại
+    const products = await Product.find().skip(skip).limit(limit);
+
+    // Tính tổng số trang
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // Trả về dữ liệu phân trang
+    res.json({
+      products,
+      totalPages,
+      currentPage: page,
+      totalProducts,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // API thêm sản phẩm mới
 router.post("/", async (req, res) => {
   try {
