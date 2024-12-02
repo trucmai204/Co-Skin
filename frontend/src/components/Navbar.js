@@ -11,6 +11,7 @@ import {
   InputAdornment,
   Box,
   Typography,
+  Avatar, // Thêm Avatar từ MUI
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
@@ -21,8 +22,16 @@ function Navbar({ cartCount }) {
   const [searchTerm, setSearchTerm] = useState(""); // Từ khóa tìm kiếm
   const [filteredProducts, setFilteredProducts] = useState([]); // Danh sách đã lọc
   const [loading, setLoading] = useState(true); // Trạng thái loading
+  const [username, setUserName] = useState(""); // Lưu tên người dùng
   const navigate = useNavigate();
+
   useEffect(() => {
+    // Kiểm tra xem có tên người dùng trong localStorage không
+    const storedUserName = localStorage.getItem("username");
+    if (storedUserName) {
+      setUserName(storedUserName); // Lấy tên người dùng từ localStorage
+    }
+
     axios
       .get("http://localhost:5000/api/products")
       .then((response) => {
@@ -59,8 +68,6 @@ function Navbar({ cartCount }) {
     setFilteredProducts(filtered);
     navigate("/search-products", { state: { filteredProducts: filtered } });
   };
-  
-  
 
   return (
     <>
@@ -157,9 +164,20 @@ function Navbar({ cartCount }) {
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
-            <Button color="inherit" component={Link} to="/users">
-              Người dùng
-            </Button>
+
+            {/* Hiển thị icon hình tròn và tên người dùng nếu có */}
+            {username ? (
+              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Avatar sx={{ bgcolor: "#C71585" }}>{username[0]}</Avatar>
+                <Typography variant="body1" sx={{ color: "#fff" }}>
+                  {username}
+                </Typography>
+              </Box>
+            ) : (
+              <Button color="inherit" component={Link} to="/users">
+                Người dùng
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>

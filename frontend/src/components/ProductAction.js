@@ -36,7 +36,7 @@ function ProductActions({ product, setCartCount }) {
       style={{
         padding: "10px",
         display: "flex",
-        alignItems: "right",
+        alignItems: "space-between",
       }}
     >
       <IconButton

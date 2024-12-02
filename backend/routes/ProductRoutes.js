@@ -13,6 +13,37 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+// API lấy sản phẩm tương tự
+router.get("/similar/:id", async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id);
+
+    if (isNaN(productId)) {
+      return res.status(400).json({ message: "ProductID không hợp lệ" });
+    }
+
+    const currentProduct = await Product.findOne({ ProductID: productId }).lean();
+    if (!currentProduct) {
+      return res.status(404).json({ message: "Sản phẩm không tồn tại" });
+    }
+
+    const similarProducts = await Product.find({
+      CategoryID: currentProduct.CategoryID,
+      ProductID: { $ne: currentProduct.ProductID }, // Loại bỏ sản phẩm hiện tại
+    })
+      .limit(10)
+      .lean();
+
+    if (similarProducts.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy sản phẩm tương tự" });
+    }
+
+    res.json(similarProducts);
+  } catch (error) {
+    console.error("Lỗi khi lấy sản phẩm tương tự:", error);
+    res.status(500).json({ message: "Lỗi server khi lấy sản phẩm tương tự" });
+  }
+});
 
 router.get("/page", async (req, res) => {
   try {

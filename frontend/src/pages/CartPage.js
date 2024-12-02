@@ -5,6 +5,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import "./CartPage.css";
+import { toast } from "react-toastify";
 
 const CartPage = () => {
   const [cart, setCart] = useState(null);
@@ -72,6 +73,7 @@ const CartPage = () => {
       const response = await axios.delete(
         `http://localhost:5000/api/carts/remove/${userId}/${productId}`
       );
+      toast.success("Xóa sản phẩm thành công!");
       setCart(response.data);
     } catch (error) {
       console.error("Error removing product:", error);

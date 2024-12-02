@@ -11,7 +11,7 @@ function SearchPage({ setCartCount }) {
 
   if (!filteredProducts || filteredProducts.length === 0) {
     return (
-      <Box textAlign="center" marginTop="20px">
+      <Box textAlign="center" marginTop="100px">
         <Typography variant="h5">Không tìm thấy sản phẩm nào!</Typography>
       </Box>
     );

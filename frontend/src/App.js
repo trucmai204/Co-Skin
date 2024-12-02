@@ -1,102 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
 import CartPage from "./pages/CartPage";
-import Login from "./pages/LoginPage";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import ProductList from "./components/ProductList";
-import CategoryProductsPage from "./pages/CategoryProductsPage";
-import CategoryPage from "./pages/CategoryPage";
-import CategoryList from "./components/CategoryList";
+import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import SearchPage from "./pages/SearchPage";
-import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
+import ProductList from "./components/ProductList";
+import CategoryPage from "./pages/CategoryPage";
+import CategoryList from "./components/CategoryList";
+import CategoryProductsPage from "./pages/CategoryProductsPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 function App() {
   const [cartCount, setCartCount] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    // Kiểm tra trạng thái đăng nhập khi ứng dụng khởi chạy
+    const userId = localStorage.getItem("userId");
+    setIsLoggedIn(!!userId);
+  }, []);
+
   const handleLogin = () => setIsLoggedIn(true);
 
   return (
     <Router>
-      {isLoggedIn && <Navbar cartCount={cartCount} />}{" "}
-      {/* Hiển thị Navbar nếu đã đăng nhập */}
+      {isLoggedIn && <Navbar cartCount={cartCount} />}
       <ToastContainer />
       <div className="content">
-        {/* Bọc các Routes trong div content */}
         <Routes>
-          {/* Không cần đăng nhập */}
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          {/* Public Routes */}
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* Cần đăng nhập */}
+          {/* Protected Routes */}
           <Route
             path="/"
             element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <HomePage setCartCount={setCartCount} cartCount={cartCount} />
-              </ProtectedRoute>
+                <HomePage setCartCount={setCartCount} />
             }
           />
           <Route
             path="/products"
             element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <ProductList setCartCount={setCartCount} />
-              </ProtectedRoute>
             }
           />
           <Route
             path="/product/:id"
             element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <ProductPage />
-              </ProtectedRoute>
+                <ProductPage setCartCount={setCartCount}/>
             }
           />
           <Route
             path="/cart"
             element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <CartPage />
-              </ProtectedRoute>
             }
           />
           <Route
             path="/categories"
             element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <CategoryList />
-              </ProtectedRoute>
             }
           />
           <Route
             path="/category/:id"
             element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <CategoryPage setCartCount={setCartCount} />
-              </ProtectedRoute>
             }
           />
           <Route
             path="/category-products/:id"
             element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <CategoryProductsPage />
-              </ProtectedRoute>
             }
           />
           <Route
             path="/search-products"
             element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <SearchPage setCartCount={setCartCount} />
-              </ProtectedRoute>
             }
           />
         </Routes>

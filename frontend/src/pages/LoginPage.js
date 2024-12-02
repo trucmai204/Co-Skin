@@ -19,7 +19,8 @@ function LoginPage({ onLogin }) {
         const userId = response.data.UserID; 
         console.log('UserId:', userId); // Thêm log này để kiểm tra giá trị của userId
         if (userId) { // Kiểm tra xem userId có giá trị không
-          localStorage.setItem("userId", userId); 
+          localStorage.setItem("userId", userId);
+          localStorage.setItem("username", username); 
           onLogin();
           navigate("/"); 
         } else {
