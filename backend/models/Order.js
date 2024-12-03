@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
     OrderID: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.Number,
         auto: true,
         required: true
     },
     UserID: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.Number,
         ref: 'User',
         required: true
     },

@@ -320,6 +320,7 @@ function ProductDetail({ setCartCount }) {
               borderRadius: "8px",
               objectFit: "cover",
               maxHeight: "300px",
+              objectPosition: "center"
             }}
           />
         </Box>

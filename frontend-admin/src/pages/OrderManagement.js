@@ -83,7 +83,7 @@ const OrderManagement = () => {
             {orders.map((order) => (
               <TableRow key={order._id}>
                 <TableCell>{order._id}</TableCell>
-                <TableCell>{order.UserID ? order.UserID.name : 'Khách vãng lai'}</TableCell>
+                <TableCell>{order.UserID ? order.UserID.Username : 'Khách vãng lai'}</TableCell>
                 <TableCell>{order.TotalAmount.toLocaleString()} VND</TableCell>
                 <TableCell>{order.Status}</TableCell>
                 <TableCell>

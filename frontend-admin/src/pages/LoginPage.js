@@ -15,7 +15,9 @@ function LoginPage({ onLogin }) {
       const response = await api.post("/users/login", { Email: username, Password: password });
 
       // Kiểm tra phản hồi từ API
+      const userId = response.data.UserID;
       if (response.status === 200) {
+        localStorage.getItem("userId", userId);
         onLogin(); // Cập nhật trạng thái đăng nhập
         navigate("/admin/management"); // Điều hướng đến trang quản lý
       }
