@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const Cart = require("../models/Cart");
+const Product = require("../models/Product");
 
 // API: Lấy toàn bộ giỏ hàng của người dùng
 router.get("/:userId", async (req, res) => {
@@ -23,6 +24,12 @@ router.post("/add/:userId", async (req, res) => {
 
   try {
     const { ProductID, Quantity, Price } = req.body;
+
+    // Kiểm tra xem tất cả các giá trị có tồn tại trong req.body không
+    if (!ProductID  || !Quantity || !Price) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
     let cart = await Cart.findOne({ UserID: req.params.userId });
 
     if (!cart) {
@@ -33,21 +40,27 @@ router.post("/add/:userId", async (req, res) => {
       });
     } else {
       // Kiểm tra nếu sản phẩm đã tồn tại, cập nhật số lượng
-      const productIndex = cart.Products.findIndex(
-        (p) => p.ProductID === ProductID
-      );
+      const productIndex = cart.Products.findIndex((p) => p.ProductID === ProductID);
       if (productIndex > -1) {
         cart.Products[productIndex].Quantity += Quantity;
       } else {
         cart.Products.push({ ProductID, Quantity, Price });
       }
+
+      const productName = await Product.findOne({ ProductID }, "ProductName");
+      if (productName) {
+        cart.Products[cart.Products.length - 1].ProductName = productName.ProductName;
+      }
     }
+
     await cart.save();
     res.status(200).json(cart);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // PUT API để cập nhật giỏ hàng
 router.put('/update-quantity', async (req, res) => {

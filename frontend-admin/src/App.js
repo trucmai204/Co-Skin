@@ -5,6 +5,7 @@ import ProductManagement from './pages/ProductManagement';
 import CategoryManagement from './pages/CategoryManagement';
 import LoginPage from './pages/LoginPage';
 import Navbar from './components/Navbar';
+import OrderManagement from './pages/OrdertManagement';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -18,15 +19,19 @@ function App() {
                 <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
                 <Route
                     path="/admin/management"
-                    element={isLoggedIn ? <HomePage /> : <Navigate to="/login" />}
+                    element={isLoggedIn ? <HomePage /> : <Navigate to="/" />}
                 />
                 <Route
                     path="/products"
-                    element={isLoggedIn ? <ProductManagement /> : <Navigate to="/login" />}
+                    element={isLoggedIn ? <ProductManagement /> : <Navigate to="/" />}
                 />
                 <Route
                     path="/categories"
-                    element={isLoggedIn ? <CategoryManagement /> : <Navigate to="/login" />}
+                    element={isLoggedIn ? <CategoryManagement /> : <Navigate to="/" />}
+                />
+                <Route
+                    path="/orders"
+                    element={isLoggedIn ? <OrderManagement /> : <Navigate to="/" />}
                 />
             </Routes>
         </Router>

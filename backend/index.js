@@ -7,6 +7,7 @@ const productRoutes = require('./routes/ProductRoutes.js');
 const categoryRoutes = require('./routes/CategoryRoutes.js');
 const cartRoutes = require('./routes/CartRoutes.js');
 const vnpay = require('./routes/VNPay.js')
+const orderRoutes = require('./routes/OrderRoutes.js');
 
 
 
@@ -36,7 +37,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/carts', cartRoutes);
-
+app.use('/api/orders', orderRoutes);
 // Khởi động server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

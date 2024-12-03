@@ -11,13 +11,13 @@ import ProductList from "./components/ProductList";
 import CategoryPage from "./pages/CategoryPage";
 import CategoryList from "./components/CategoryList";
 import CategoryProductsPage from "./pages/CategoryProductsPage";
-import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 function App() {
-  const [cartCount, setCartCount] = useState(0);
+  const userCartCount = localStorage.getItem("userCartCount");
+  const [cartCount, setCartCount] = useState(userCartCount);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -30,7 +30,16 @@ function App() {
 
   return (
     <Router>
-      {isLoggedIn && <Navbar cartCount={cartCount} />}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage setCartCount={setCartCount} cartCount={cartCount} />
+          }
+        />
+      </Routes>
+
+      <Navbar cartCount={cartCount} />
       <ToastContainer />
       <div className="content">
         <Routes>
@@ -40,52 +49,26 @@ function App() {
 
           {/* Protected Routes */}
           <Route
-            path="/"
-            element={
-                <HomePage setCartCount={setCartCount} />
-            }
-          />
-          <Route
             path="/products"
-            element={
-                <ProductList setCartCount={setCartCount} />
-            }
+            element={<ProductList setCartCount={setCartCount} />}
           />
           <Route
             path="/product/:id"
-            element={
-                <ProductPage setCartCount={setCartCount}/>
-            }
+            element={<ProductPage setCartCount={setCartCount} />}
           />
-          <Route
-            path="/cart"
-            element={
-                <CartPage />
-            }
-          />
-          <Route
-            path="/categories"
-            element={
-                <CategoryList />
-            }
-          />
+          <Route path="/cart" element={<CartPage setCartCount={setCartCount}/>} />
+          <Route path="/categories" element={<CategoryList />} />
           <Route
             path="/category/:id"
-            element={
-                <CategoryPage setCartCount={setCartCount} />
-            }
+            element={<CategoryPage setCartCount={setCartCount} />}
           />
           <Route
             path="/category-products/:id"
-            element={
-                <CategoryProductsPage />
-            }
+            element={<CategoryProductsPage />}
           />
           <Route
             path="/search-products"
-            element={
-                <SearchPage setCartCount={setCartCount} />
-            }
+            element={<SearchPage setCartCount={setCartCount} />}
           />
         </Routes>
       </div>

@@ -7,7 +7,7 @@ import axios from "axios";
 import "./CartPage.css";
 import { toast } from "react-toastify";
 
-const CartPage = () => {
+const CartPage = ({ setCartCount }) => {
   const [cart, setCart] = useState(null);
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [error, setError] = useState(null);
@@ -75,6 +75,8 @@ const CartPage = () => {
       );
       toast.success("Xóa sản phẩm thành công!");
       setCart(response.data);
+      setCartCount((prevCount) => response.data.Products.lenght);
+      localStorage.setItem("userCartCount", response.data.Products.lenght);
     } catch (error) {
       console.error("Error removing product:", error);
     }
@@ -124,7 +126,10 @@ const CartPage = () => {
               <td className="quantity-cell">
                 <IconButton
                   onClick={() =>
-                    handleDecreaseQuantity(product.ProductID, product.Quantity)
+                    handleDecreaseQuantity(
+                      product.ProductID,
+                      product.Quantity
+                    )
                   }
                 >
                   <RemoveIcon className="quantity-icon" />
@@ -135,7 +140,7 @@ const CartPage = () => {
                     handleIncreaseQuantity(product.ProductID, product.Quantity)
                   }
                 >
-                  <AddIcon className="quantity-icon"/>
+                  <AddIcon className="quantity-icon" />
                 </IconButton>
               </td>
               <td>{product.Price.toLocaleString()} VND</td>

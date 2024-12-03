@@ -10,12 +10,11 @@ import {
   TextField,
   InputAdornment,
   Box,
-  Typography,
-  Avatar, // Thêm Avatar từ MUI
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
+import UserMenu from "./UserMenu";
 
 function Navbar({ cartCount }) {
   const [products, setProducts] = useState([]);
@@ -24,12 +23,11 @@ function Navbar({ cartCount }) {
   const [loading, setLoading] = useState(true); // Trạng thái loading
   const [username, setUserName] = useState(""); // Lưu tên người dùng
   const navigate = useNavigate();
-
   useEffect(() => {
-    // Kiểm tra xem có tên người dùng trong localStorage không
-    const storedUserName = localStorage.getItem("username");
-    if (storedUserName) {
-      setUserName(storedUserName); // Lấy tên người dùng từ localStorage
+    const storedUsername = localStorage.getItem("username");
+    console.log()
+    if (storedUsername) {
+      setUserName(storedUsername); // Lấy tên người dùng từ localStorage
     }
 
     axios
@@ -52,7 +50,7 @@ function Navbar({ cartCount }) {
       console.log("Không nhập từ khóa, hiển thị tất cả sản phẩm:", products);
       return;
     }
-  
+
     const filtered = products.filter((product) => {
       const name = product.ProductName?.toLowerCase() || "";
       const description = product.Description?.toLowerCase() || "";
@@ -61,10 +59,10 @@ function Navbar({ cartCount }) {
         description.includes(searchTerm.toLowerCase())
       );
     });
-  
+
     console.log("Từ khóa:", searchTerm);
     console.log("Sản phẩm tìm thấy:", filtered);
-  
+
     setFilteredProducts(filtered);
     navigate("/search-products", { state: { filteredProducts: filtered } });
   };
@@ -125,9 +123,7 @@ function Navbar({ cartCount }) {
                 disableUnderline: true,
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon
-                      sx={{ color: "#C71585", marginLeft: "10px" }}
-                    />
+                    <SearchIcon sx={{ color: "#C71585", marginLeft: "10px" }} />
                   </InputAdornment>
                 ),
               }}
@@ -166,18 +162,7 @@ function Navbar({ cartCount }) {
             </IconButton>
 
             {/* Hiển thị icon hình tròn và tên người dùng nếu có */}
-            {username ? (
-              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <Avatar sx={{ bgcolor: "#C71585" }}>{username[0]}</Avatar>
-                <Typography variant="body1" sx={{ color: "#fff" }}>
-                  {username}
-                </Typography>
-              </Box>
-            ) : (
-              <Button color="inherit" component={Link} to="/users">
-                Người dùng
-              </Button>
-            )}
+            <UserMenu username={username} />
           </Box>
         </Toolbar>
       </AppBar>

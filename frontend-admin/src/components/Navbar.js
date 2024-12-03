@@ -23,7 +23,7 @@ function Navbar() {
         <Button color="inherit" component={Link} to="/categories">
           Quản lý Danh mục
         </Button>
-        <Button color="inherit" component={Link} to="">
+        <Button color="inherit" component={Link} to="/orders">
           Quản lý Đơn Hàng
         </Button>
       </Toolbar>

@@ -295,7 +295,7 @@ function ProductDetail({ setCartCount }) {
   if (!product) return <Typography>Loading...</Typography>;
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: "0px" }}>
+    <Container maxWidth="lg" style={{ marginTop: 100 }}>
       {/* Thông tin sản phẩm */}
       <Box
         display="flex"
@@ -324,7 +324,7 @@ function ProductDetail({ setCartCount }) {
           />
         </Box>
 
-        <Box flex={2} padding={{ xs: "10px", md: "20px" }}>
+        <Box flex={2} padding={{ xs: "10px", md: "2px" }}>
           <Typography
             variant="h4"
             gutterBottom

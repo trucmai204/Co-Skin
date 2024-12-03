@@ -20,7 +20,8 @@ function LoginPage({ onLogin }) {
         console.log('UserId:', userId); // Thêm log này để kiểm tra giá trị của userId
         if (userId) { // Kiểm tra xem userId có giá trị không
           localStorage.setItem("userId", userId);
-          localStorage.setItem("username", username); 
+          localStorage.setItem("username", response.data.Username); 
+          localStorage.setItem("userCartCount", response.data.userCartCount);
           onLogin();
           navigate("/"); 
         } else {
