@@ -46,7 +46,7 @@ function CategoryPage({ setCartCount }) {
           <p>Không có sản phẩm nào trong danh mục này.</p>
         ) : (
           products.map((product) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={product._id} >
               <Card
                 sx={{
                   height: "100%",

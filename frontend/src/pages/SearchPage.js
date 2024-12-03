@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { CardActionArea,Box, Typography, Grid, Card, CardContent, CardMedia, Button, IconButton } from "@mui/material";
+import { CardActionArea,Box, Typography, Grid, Card, CardContent, CardMedia } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ProductActions from "../components/ProductAction";
 

@@ -19,7 +19,6 @@ import kemduong from "../assets/kemduong.jpg";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 function HomePage({ setCartCount, cartCount }) {
-  const userId = localStorage.getItem("userId");
   // Dữ liệu mẫu cho các quảng cáo
   const advertisements = [
     {
@@ -143,7 +142,7 @@ function HomePage({ setCartCount, cartCount }) {
       >
         Danh sách sản phẩm nổi bật
       </Typography>
-      <ProductList setCartCount={setCartCount} />
+      <ProductList setCartCount={setCartCount} style={{ padding: 30, marginTop: - 40 }} />
       <Footer />
     </Container>
   );

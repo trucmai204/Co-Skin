@@ -6,11 +6,12 @@ import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import "./CartPage.css";
 import { toast } from "react-toastify";
-
+import { useNavigate } from "react-router-dom";
 const CartPage = ({ setCartCount }) => {
   const [cart, setCart] = useState(null);
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -81,26 +82,10 @@ const CartPage = ({ setCartCount }) => {
       console.error("Error removing product:", error);
     }
   };
-  async function handleCheckout() {
-    /*try {
-      const total = totalMoney(selectedProducts);
-      const newPayment = {
-        products: selectedProducts,
-        amount: total,
-        bankCode: null,
-        language: "vn",
-      };
-      const response = await axios.post(
-        "http://localhost:8888/api/v1/vnpay/create_payment_url",
-        newPayment
-      );
-      if (response.status === 200 && response.data) {
-        window.location.href = response.data;
-      }
-    } catch (error) {
-      alert(`Lỗi: ${error?.message}`);
-    }*/
-  }
+  const handleCheckout = () => {
+    // Chuyển hướng đến trang PaymentPage
+    navigate("/payment", { state: { cart } });
+  };
 
   if (!cart) {
     return <div>Đang cập nhật giỏ hàng...</div>;

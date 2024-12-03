@@ -8,7 +8,6 @@ import {
   Typography,
   CardActionArea,
   IconButton,
-  Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -54,8 +53,7 @@ function ProductList({ setCartCount }) {
       container
       spacing={3}
       justifyContent="center"
-      style={{ padding: "40px" }}
-      marginTop={"50px"}
+      style={{ padding: 30, marginTop: 45 }}
     >
       {products.map((product) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={product.ProductID}>

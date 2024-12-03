@@ -38,6 +38,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/carts', cartRoutes);
 app.use('/api/orders', orderRoutes);
+app.use("/api/vnpay", vnpay);
 // Khởi động server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

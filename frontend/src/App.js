@@ -11,6 +11,8 @@ import ProductList from "./components/ProductList";
 import CategoryPage from "./pages/CategoryPage";
 import CategoryList from "./components/CategoryList";
 import CategoryProductsPage from "./pages/CategoryProductsPage";
+import Chatbot from "./components/Chatbot";
+import PaymentPage from "./pages/PaymentPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -50,13 +52,20 @@ function App() {
           {/* Protected Routes */}
           <Route
             path="/products"
-            element={<ProductList setCartCount={setCartCount} />}
+            element={
+              <ProductList
+                setCartCount={setCartCount}
+              />
+            }
           />
           <Route
             path="/product/:id"
             element={<ProductPage setCartCount={setCartCount} />}
           />
-          <Route path="/cart" element={<CartPage setCartCount={setCartCount}/>} />
+          <Route
+            path="/cart"
+            element={<CartPage setCartCount={setCartCount} />}
+          />
           <Route path="/categories" element={<CategoryList />} />
           <Route
             path="/category/:id"
@@ -70,7 +79,9 @@ function App() {
             path="/search-products"
             element={<SearchPage setCartCount={setCartCount} />}
           />
+          <Route path="/payment" element={<PaymentPage />} />{" "}
         </Routes>
+        <Chatbot />
       </div>
     </Router>
   );

@@ -11,8 +11,6 @@ import {
   IconButton,
   Rating,
 } from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { toast } from "react-toastify";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import ProductActions from "./ProductAction";
@@ -276,17 +274,6 @@ function ProductDetail({ setCartCount }) {
   // State and Handler Functions
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
 
-  const handleNextProduct = () => {
-    if (currentProductIndex < similarProducts.length - 1) {
-      setCurrentProductIndex(currentProductIndex + 1);
-    }
-  };
-
-  const handlePrevProduct = () => {
-    if (currentProductIndex > 0) {
-      setCurrentProductIndex(currentProductIndex - 1);
-    }
-  };
   const handleBuyNow = (product) => {
     console.log("Mua ngay:", product);
     // Xử lý chuyển đến trang thanh toán hoặc các bước tiếp theo
@@ -320,7 +307,7 @@ function ProductDetail({ setCartCount }) {
               borderRadius: "8px",
               objectFit: "cover",
               maxHeight: "300px",
-              objectPosition: "center"
+              objectPosition: "center",
             }}
           />
         </Box>
