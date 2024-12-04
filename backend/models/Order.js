@@ -21,7 +21,7 @@ const orderSchema = new mongoose.Schema({
     },
     Status: {
         type: String,
-        enum: ['Chờ thanh toán', 'Đã thanh toán', 'Thanh toán thất bại'],
+        enum: ['Chờ thanh toán', 'Đã thanh toán', 'Thanh toán thất bại','Chờ giao hàng', 'Đang giao hàng', 'Giao hàng thành công', 'Giao hàng thất bại'],
         default: 'Chờ thanh toán'
     },
     ShippingAddress: {

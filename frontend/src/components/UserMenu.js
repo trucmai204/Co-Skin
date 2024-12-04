@@ -18,9 +18,21 @@ const UserMenu = ({ username }) => {
     // Xóa dữ liệu đã lưu trong localStorage
     localStorage.clear();
     navigate("/login");
-
+    window.location.reload();
     // Đóng menu
     handleMenuClose();
+  };
+
+  const handleUserHistory = () => {
+    // Điều hướng đến trang lịch sử người dùng
+    navigate("/userhistory");
+    handleMenuClose(); // Đóng menu sau khi điều hướng
+  };
+
+  const handleAccountInfo = () => {
+    // Điều hướng đến trang thông tin tài khoản
+    navigate("/account-info");
+    handleMenuClose(); // Đóng menu sau khi điều hướng
   };
 
   return (
@@ -55,8 +67,9 @@ const UserMenu = ({ username }) => {
           horizontal: "right",
         }}
       >
-        <MenuItem onClick={handleMenuClose}>Lịch sử người dùng</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Thông tin tài khoản</MenuItem>
+        {/* Thêm chức năng điều hướng đến Lịch sử người dùng */}
+        <MenuItem onClick={handleUserHistory}>Đơn Hàng</MenuItem>
+        <MenuItem onClick={handleAccountInfo}>Thông tin tài khoản</MenuItem>
         <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
       </Menu>
     </div>

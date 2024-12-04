@@ -87,62 +87,71 @@ router.post("/create_payment_url", (req, res) => {
   }
 });
 // API xử lý kết quả trả về từ VNPay
-router.get("/vnpay_return", (req, res) => {
-  try {
-    let vnp_Params = req.query; // Sử dụng query cho GET
+router.get('/vnpay_return', function (req, res, next) {
+  let vnp_Params = req.query;
+  let secureHash = vnp_Params['vnp_SecureHash'];
+  delete vnp_Params['vnp_SecureHash'];
+  delete vnp_Params['vnp_SecureHashType'];
+  vnp_Params = sortObject(vnp_Params);
+  let config = require('config');
+  let tmnCode = config.get('vnp_TmnCode');
+  let secretKey = config.get('vnp_HashSecret');
+  let querystring = require('qs');
+  let signData = querystring.stringify(vnp_Params, { encode: false });
+  let crypto = require("crypto");
+  let hmac = crypto.createHmac("sha512", secretKey);
+  let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
 
-    // Lấy SecureHash từ tham số
-    let secureHash = vnp_Params["vnp_SecureHash"];
+  if (secureHash === signed) {
+      let orderStatus = vnp_Params['vnp_ResponseCode'] === '00' ? 'success' : 'error';
 
-    // Xóa SecureHash và SecureHashType để chuẩn bị ký lại dữ liệu
-    delete vnp_Params["vnp_SecureHash"];
-    delete vnp_Params["vnp_SecureHashType"];
+      if (orderStatus === 'success') {
+          res.status(200).send(`
+              <html>
+                  <head>
+                      <style>
+                          body { font-family: Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background-color: #f7f8fa; }
+                          .container { text-align: center; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+                          .container h2 { color: #28a745; }
+                          .details { margin-top: 10px; text-align: left; }
+                          .details p { margin: 5px 0; }
+                          .button { margin-top: 20px; }
+                          .button button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+                      </style>
+                  </head>
+                  <body>
+                      <div class="container">
+                          <h2>Payment Successful!</h2>
+                          <div class="details">
+                              <p><strong>Amount:</strong> đ${vnp_Params['vnp_Amount'] / 100}</p>
+                              <p><strong>Transaction ID:</strong> ${vnp_Params['vnp_TransactionNo']}</p>
+                              <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+                              <p><strong>Payment Method:</strong> ${vnp_Params['vnp_BankCode'] || 'Unknown'}</p>
+                          </div>
+                      <div class="button">
+                          <button onclick="goBack()">DONE</button>
+                      </div>
 
-    // Sắp xếp các tham số theo thứ tự
-    vnp_Params = sortObject(vnp_Params);
-
-    // Log các tham số sau khi sắp xếp để kiểm tra
-    console.log("Sorted vnp_Params:", vnp_Params);
-
-    // Lấy thông tin từ file config
-    const secretKey = config.get("vnp_HashSecret");
-
-    // Ký lại dữ liệu bằng secretKey
-    const querystring = require("qs");
-    const signData = querystring.stringify(vnp_Params, { encode: false });
-    const hmac = crypto.createHmac("sha512", secretKey);
-    const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
-
-    // So sánh SecureHash gửi về và SecureHash tính toán
-    console.log("Calculated signed:", signed); // Log để kiểm tra chữ ký tính toán
-    if (secureHash === signed) {
-      const responseCode = vnp_Params["vnp_ResponseCode"];
-      if (responseCode === "00") {
-        // Thanh toán thành công
-        return res.status(200).json({
-          success: true,
-          message: "Thanh toán thành công!",
-        });
+                      <script>
+                      function goBack() {
+                          // Android 
+                          if (window.AndroidInterface) {
+                              window.AndroidInterface.paymentSuccess();
+                          }
+                          
+                          // web 
+                          window.location.href = 'http://localhost:3000/';
+                      }
+</script>
+                      </div>
+                  </body>
+              </html>
+          `);
       } else {
-        // Thanh toán thất bại
-        return res.status(500).json({
-          success: false,
-          message: "Thanh toán thất bại!",
-        });
+          res.status(200).send('<p>Payment failed. Please try again.</p>');
       }
-    } else {
-      console.log("Secure hash mismatch!");
-      return res.status(500).json({
-        success: false,
-        message: "Chữ ký không hợp lệ.",
-      });
-    }
-  } catch (error) {
-    console.error("Error in vnpay_return:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Đã xảy ra lỗi khi xử lý yêu cầu.",
-    });
+  } else {
+      res.status(400).send('Invalid request.');
   }
 });
 

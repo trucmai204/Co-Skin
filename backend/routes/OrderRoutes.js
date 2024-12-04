@@ -3,16 +3,6 @@ const Order = require("../models/Order"); // Đường dẫn đến file định
 
 const router = express.Router();
 
-// Lấy tất cả đơn hàng
-router.get("/", async (req, res) => {
-  try {
-    const orders = await Order.find().exec();
-
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ message: "Lỗi lấy đơn hàng" });
-  }
-});
 
 // API tạo đơn hàng
 router.post("/create", async (req, res) => {
@@ -75,14 +65,61 @@ router.put("/update-status/:id", async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+  try {
+    const { 
+      search, 
+      status, 
+      startDate, 
+      endDate 
+    } = req.query;
+
+    // Build query object
+    let query = {};
+
+    // Search filter for OrderID or ShippingAddress
+    if (search) {
+      query.$or = [
+        { _id: { $regex: search, $options: 'i' } },
+        { ShippingAddress: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    // Status filter
+    if (status) {
+      query.Status = status;
+    }
+
+    // Date range filter
+    if (startDate && endDate) {
+      query.OrderDate = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate)
+      };
+    }
+
+    // Fetch and return filtered orders
+    const orders = await Order.find(query).sort({ OrderDate: -1 });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Xóa đơn hàng theo ID
 router.delete("/:id", async (req, res) => {
+  const { orderId } = req.params;
+
   try {
-    const id = req.params.id;
-    await Order.findByIdAndRemove(id).exec();
-    res.json({ message: "Đơn hàng đã được xóa" });
-  } catch (err) {
-    res.status(500).json({ message: "Lỗi xóa đơn hàng" });
+      const order = await Order.findOneAndDelete({ OrderID: orderId });
+
+      if (!order) {
+          return res.status(404).json({ message: 'Không tìm thấy đơn hàng!' });
+      }
+
+      res.status(200).json({ message: 'Đơn hàng đã được xóa thành công!', order });
+  } catch (error) {
+      res.status(500).json({ message: 'Đã xảy ra lỗi khi xóa đơn hàng.', error });
   }
 });
 

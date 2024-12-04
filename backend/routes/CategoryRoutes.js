@@ -12,6 +12,7 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 router.get("/:categoryId", async (req, res) => {
   try {
     const categoryId = req.params.categoryId;  
@@ -25,6 +26,7 @@ router.get("/:categoryId", async (req, res) => {
     res.status(500).json({ message: "Lỗi khi lấy sản phẩm theo danh mục", error: error.message });
   }
 });
+
 // Thêm loại sản phẩm mới
 router.post("/add", async (req, res) => {
   try {

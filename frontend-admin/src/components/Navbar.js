@@ -3,15 +3,15 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#fb6f92",zIndex: 1000,
-        top: 0,
-        left: 0, }}>
+    <AppBar
+      position="fixed"
+      sx={{ backgroundColor: "#fb6f92", zIndex: 1000, top: 0, left: 0 }}
+    >
       <Toolbar
         sx={{
           display: "flex",
           justifyContent: "space-around",
           color: "white",
-          
         }}
       >
         <Button color="inherit" component={Link} to="/admin/management">

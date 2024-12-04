@@ -25,19 +25,19 @@ function App() {
                 <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
                 <Route
                     path="/admin/management"
-                    element={isLoggedIn ? <HomePage /> : <Navigate to="/" />}
+                    element={ <HomePage /> }
                 />
                 <Route
                     path="/products"
-                    element={isLoggedIn ? <ProductManagement /> : <Navigate to="/" />}
+                    element={<ProductManagement /> }
                 />
                 <Route
                     path="/categories"
-                    element={isLoggedIn ? <CategoryManagement /> : <Navigate to="/" />}
+                    element={ <CategoryManagement />}
                 />
                 <Route
                     path="/orders"
-                    element={isLoggedIn ? <OrderManagement /> : <Navigate to="/" />}
+                    element={ <OrderManagement />}
                 />
             </Routes>
         </Router>

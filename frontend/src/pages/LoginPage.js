@@ -24,6 +24,7 @@ function LoginPage({ onLogin }) {
           localStorage.setItem("userCartCount", response.data.userCartCount);
           onLogin();
           navigate("/"); 
+          window.location.reload();
         } else {
           console.error('UserId không được trả về từ API');
         }

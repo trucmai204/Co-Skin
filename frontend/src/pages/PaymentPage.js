@@ -18,6 +18,7 @@ import {
   Typography,
   Button,
 } from "@mui/material";
+import { toast } from "react-toastify";
 
 const PaymentPage = () => {
   const location = useLocation();
@@ -76,10 +77,8 @@ const PaymentPage = () => {
                 }
               )
               .then(() => {
-                setPaymentStatus({
-                  type: "success",
-                  message: "Thanh toán thành công!",
-                });
+                toast.success("Bạn đã thanh toán thành công.");
+                navigate("/");
               })
               .catch((error) => {
                 setPaymentStatus({

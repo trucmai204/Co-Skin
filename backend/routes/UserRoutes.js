@@ -105,6 +105,57 @@ router.get("/getUser/:id", async (req, res) => {
   }
 });
 
+// Lấy tất cả thông tin theo UserID
+router.get("/details/:userID", async (req, res) => {
+  try {
+    const userID = req.params.userID;
+
+    // Tìm thông tin người dùng theo UserID
+    const user = await User.findOne({ UserID: userID });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Tìm thông tin giỏ hàng liên quan đến UserID
+    const cart = await Cart.findOne({ UserID: userID });
+
+    // Tạo response bao gồm cả thông tin người dùng và giỏ hàng
+    const userDetails = {
+      user,
+      cart: cart || { message: "No cart found for this user" }, // Nếu không có giỏ hàng, trả về thông báo
+    };
+
+    res.json(userDetails);
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+    res.status(500).json({ message: "Error fetching user details" });
+  }
+});
+// Cập nhật thông tin người dùng qua UserID
+router.put("/edit/:userID", async (req, res) => {
+  try {
+    const userID = req.params.userID;
+
+    // Tìm và cập nhật thông tin người dùng theo UserID
+    const updatedUser = await User.findOneAndUpdate(
+      { UserID: userID }, // Tìm người dùng theo UserID
+      req.body, // Dữ liệu cần cập nhật từ body request
+      { new: true, runValidators: true } // Tùy chọn trả về dữ liệu đã cập nhật và kiểm tra validation
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "User updated successfully", user: updatedUser });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Error updating user" });
+  }
+});
+
+
+
 // Cập nhật thông tin người dùng
 router.put("/:id", async (req, res) => {
   try {
