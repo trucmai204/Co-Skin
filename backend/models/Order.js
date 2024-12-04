@@ -4,7 +4,7 @@ const orderSchema = new mongoose.Schema({
     OrderID: {
         type: mongoose.Schema.Types.Number,
         auto: true,
-        required: true
+        required: false
     },
     UserID: {
         type: mongoose.Schema.Types.Number,
@@ -21,8 +21,8 @@ const orderSchema = new mongoose.Schema({
     },
     Status: {
         type: String,
-        enum: ['Processing', 'Completed', 'Cancelled'],
-        default: 'Processing'
+        enum: ['Chờ thanh toán', 'Đã thanh toán', 'Thanh toán thất bại'],
+        default: 'Chờ thanh toán'
     },
     ShippingAddress: {
         type: String,
@@ -30,7 +30,7 @@ const orderSchema = new mongoose.Schema({
     },
     PaymentMethod: {
         type: String,
-        enum: ['COD', 'Online Payment'],
+        enum: ['Online Payment'],
         required: true
     }
 });

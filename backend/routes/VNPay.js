@@ -118,25 +118,31 @@ router.get("/vnpay_return", (req, res) => {
     if (secureHash === signed) {
       const responseCode = vnp_Params["vnp_ResponseCode"];
       if (responseCode === "00") {
-        return res
-          .status(200)
-          .json({ success: true, message: "Giao dịch thành công." });
+        // Thanh toán thành công
+        return res.status(200).json({
+          success: true,
+          message: "Thanh toán thành công!",
+        });
       } else {
-        return res
-          .status(200)
-          .json({ success: false, message: "Giao dịch thất bại." });
+        // Thanh toán thất bại
+        return res.status(500).json({
+          success: false,
+          message: "Thanh toán thất bại!",
+        });
       }
     } else {
       console.log("Secure hash mismatch!");
-      return res
-        .status(400)
-        .json({ success: false, message: "Chữ ký không hợp lệ." });
+      return res.status(500).json({
+        success: false,
+        message: "Chữ ký không hợp lệ.",
+      });
     }
   } catch (error) {
     console.error("Error in vnpay_return:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Internal server error" });
+    return res.status(500).json({
+      success: false,
+      message: "Đã xảy ra lỗi khi xử lý yêu cầu.",
+    });
   }
 });
 

@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./PaymentPage.css"; // Thêm CSS nếu cần
+import "./PaymentPage.css";
+import {
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  FormControl,
+  FormLabel,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Button,
+} from "@mui/material";
 
 const PaymentPage = () => {
   const location = useLocation();
@@ -12,6 +28,7 @@ const PaymentPage = () => {
   const [selectedBankCode, setSelectedBankCode] = useState("");
   const [language, setLanguage] = useState("vn");
   const userId = localStorage.getItem("userId");
+  const [orderId, setOrderId] = useState("");
 
   useEffect(() => {
     // Nếu có giỏ hàng từ state, dùng nó. Nếu không, truy vấn lại API
@@ -35,7 +52,12 @@ const PaymentPage = () => {
     const vnpResponseCode = queryParams.get("vnp_ResponseCode");
     const vnpTxnRef = queryParams.get("vnp_TxnRef");
 
+    // Lấy orderId từ query string hoặc từ state nếu có
+    const orderIdFromQuery = queryParams.get("orderId") || orderId;
+    setOrderId(orderIdFromQuery); // Cập nhật orderId từ query string nếu có
+
     if (vnpResponseCode && vnpTxnRef) {
+      // Gửi yêu cầu GET để kiểm tra kết quả thanh toán từ backend
       axios
         .get("http://localhost:5000/api/vnpay/vnpay_return", {
           params: {
@@ -45,15 +67,51 @@ const PaymentPage = () => {
         })
         .then((response) => {
           if (response.status === 200 && response.data.success) {
-            setPaymentStatus({
-              type: "success",
-              message: "Thanh toán thành công!",
-            });
+            // Cập nhật trạng thái đơn hàng nếu thanh toán thành công
+            axios
+              .put(
+                `http://localhost:5000/api/orders/update-status/${orderId}`,
+                {
+                  Status: "Đã thanh toán",
+                }
+              )
+              .then(() => {
+                setPaymentStatus({
+                  type: "success",
+                  message: "Thanh toán thành công!",
+                });
+              })
+              .catch((error) => {
+                setPaymentStatus({
+                  type: "error",
+                  message: "Lỗi khi cập nhật trạng thái đơn hàng.",
+                });
+                console.error("Error updating order status:", error);
+              });
           } else {
-            setPaymentStatus({
-              type: "error",
-              message: "Thanh toán thất bại. Vui lòng thử lại.",
-            });
+            // Cập nhật trạng thái đơn hàng nếu thanh toán thất bại
+            axios
+              .put(
+                `http://localhost:5000/api/orders/update-status/${orderId}`,
+                {
+                  Status: "Thanh toán thất bại",
+                }
+              )
+              .then(() => {
+                setPaymentStatus({
+                  type: "error",
+                  message:
+                    response.data.message ||
+                    "Thanh toán thất bại. Vui lòng thử lại.",
+                });
+              })
+              .catch((error) => {
+                setPaymentStatus({
+                  type: "error",
+                  message: "Lỗi khi cập nhật trạng thái đơn hàng.",
+                });
+                console.error("Error updating order status:", error);
+              });
           }
         })
         .catch((error) => {
@@ -64,7 +122,7 @@ const PaymentPage = () => {
           console.error("Error verifying payment:", error);
         });
     }
-  }, []);
+  }, [orderId]); // Chạy lại khi orderId thay đổi
 
   if (!cart || cart.Products.length === 0) {
     return <div>Giỏ hàng không hợp lệ hoặc không có sản phẩm.</div>;
@@ -90,6 +148,36 @@ const PaymentPage = () => {
         alert("Vui lòng chọn phương thức thanh toán.");
         return;
       }
+
+      const userId = parseInt(localStorage.getItem("userId"));
+      const userResponse = await axios.get(
+        `http://localhost:5000/api/users/getUser/${userId}`
+      );
+
+      if (userResponse.status !== 200) {
+        alert("Không tìm được người dùng.");
+        return;
+      }
+
+      const shippingAddress = userResponse.data.Address;
+      const paymentMethod = "Online Payment";
+
+      const createOrderResponse = await axios.post(
+        "http://localhost:5000/api/orders/create",
+        {
+          UserID: userId,
+          TotalAmount: total,
+          ShippingAddress: shippingAddress,
+          PaymentMethod: paymentMethod,
+        }
+      );
+
+      if (createOrderResponse.status !== 201) {
+        alert("Không tạo được đơn hàng");
+        return;
+      }
+
+      setOrderId(createOrderResponse.data._id);
 
       const response = await axios.post(
         "http://localhost:5000/api/vnpay/create_payment_url",
@@ -128,96 +216,97 @@ const PaymentPage = () => {
         </div>
       )}
 
-      <div className="order-summary">
-        <h2>Thông tin đơn hàng</h2>
-        <table className="order-table">
-          <thead>
-            <tr>
-              <th>Sản phẩm</th>
-              <th>Số lượng</th>
-              <th>Giá</th>
-              <th>Thành tiền</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cart.Products.map((product) => (
-              <tr key={product.ProductID}>
-                <td>{product.ProductName}</td>
-                <td>{product.Quantity}</td>
-                <td>{product.Price.toLocaleString()} VND</td>
-                <td>
-                  {(product.Price * product.Quantity).toLocaleString()} VND
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div>
+        <Typography variant="h6" gutterBottom style={{ fontWeight: 700 }}>
+          Thông tin đơn hàng
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ textAlign: "center", fontWeight: 700 }}>
+                  Sản phẩm
+                </TableCell>
+                <TableCell style={{ textAlign: "center", fontWeight: 700 }}>
+                  Số lượng
+                </TableCell>
+                <TableCell style={{ textAlign: "center", fontWeight: 700 }}>
+                  Giá
+                </TableCell>
+                <TableCell style={{ textAlign: "center", fontWeight: 700 }}>
+                  Thành tiền
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {cart.Products.map((product) => (
+                <TableRow key={product.ProductID}>
+                  <TableCell align="left">{product.ProductName}</TableCell>
+                  <TableCell align="center">{product.Quantity}</TableCell>
+                  <TableCell align="center">
+                    {product.Price.toLocaleString()} VND
+                  </TableCell>
+                  <TableCell align="right">
+                    {(product.Price * product.Quantity).toLocaleString()} VND
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Typography
+          variant="h6"
+          align="right"
+          marginTop={1}
+          style={{ fontWeight: 700 }}
+        >
+          Tổng cộng: {totalMoney().toLocaleString()} VND
+        </Typography>
       </div>
 
-      <div className="total-amount">
-        <h3>Tổng cộng: {totalMoney().toLocaleString()} VND</h3>
-      </div>
-
-      <div className="payment-options">
-        <h3>Chọn phương thức thanh toán:</h3>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="bankCode"
+      <div>
+        <FormControl>
+          <FormLabel id="payment-options-label" style={{ marginBottom: 5 }}>
+            Chọn phương thức thanh toán:
+          </FormLabel>
+          <RadioGroup
+            aria-labelledby="payment-options-label"
+            name="bankCode"
+            value={selectedBankCode}
+            onChange={(e) => setSelectedBankCode(e.target.value)}
+          >
+            <FormControlLabel
               value=""
-              checked={selectedBankCode === ""}
-              onChange={(e) => setSelectedBankCode(e.target.value)}
+              control={<Radio />}
+              label="Cổng thanh toán VNPAYQR"
             />
-            Cổng thanh toán VNPAYQR
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="bankCode"
+            <FormControlLabel
               value="VNPAYQR"
-              checked={selectedBankCode === "VNPAYQR"}
-              onChange={(e) => setSelectedBankCode(e.target.value)}
+              control={<Radio />}
+              label="Thanh toán qua ứng dụng hỗ trợ VNPAYQR"
             />
-            Thanh toán qua ứng dụng hỗ trợ VNPAYQR
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="bankCode"
+            <FormControlLabel
               value="VNBANK"
-              checked={selectedBankCode === "VNBANK"}
-              onChange={(e) => setSelectedBankCode(e.target.value)}
+              control={<Radio />}
+              label="Thanh toán qua ATM"
             />
-            Thanh toán qua ATM
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="bankCode"
+            <FormControlLabel
               value="INTCARD"
-              checked={selectedBankCode === "INTCARD"}
-              onChange={(e) => setSelectedBankCode(e.target.value)}
+              control={<Radio />}
+              label="Thanh toán qua thẻ quốc tế"
             />
-            Thanh toán qua thẻ quốc tế
-          </label>
-        </div>
+          </RadioGroup>
+        </FormControl>
       </div>
 
       <div className="payment-buttons">
-        <button
+        <Button
           onClick={handleCheckout}
           disabled={loading}
           className="checkout-btn"
         >
           {loading ? "Đang xử lý..." : "Thanh toán"}
-        </button>
+        </Button>
       </div>
     </div>
   );

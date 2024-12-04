@@ -1,12 +1,11 @@
 /* CartPage.css */
 
 .cart-container {
-    max-width: 700px;
+    max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
     background-color: #f9f9f9;
     margin-top: 8%;
-    border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   }
   
@@ -80,7 +79,7 @@
     font-size: 18px;
     font-weight: bold;
     color: white;
-    background-color: #f097ad;
+    background-color: #fb6f92;
     border: none;
     border-radius: 4px;
     cursor: pointer;

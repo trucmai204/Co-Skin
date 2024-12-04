@@ -88,11 +88,20 @@ router.post("/login", async (req, res) => {
 // Lấy thông tin người dùng theo ID
 router.get("/getUser/:id", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
+    console.log(req.params);
+    const userId = parseInt(req.params.id);
+    const user = await User.findOne({ UserID: userId });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy user với UserID này." });
+    }
+
+    res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Lỗi khi tìm user:", error);
+    res.status(500).json({ message: error });
   }
 });
 

@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { IconButton } from "@mui/material";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  IconButton,
+  Button,
+  Typography,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
@@ -93,66 +102,91 @@ const CartPage = ({ setCartCount }) => {
 
   return (
     <div className="cart-container">
-      <h1>Giỏ hàng</h1>
-      <table className="cart-table">
-        <thead>
-          <tr>
-            <th>Sản phẩm</th>
-            <th>Số lượng</th>
-            <th>Giá</th>
-            <th>Thành tiền</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
+      <Typography variant="h5" gutterBottom>
+        Giỏ hàng
+      </Typography>
+
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <strong>Sản phẩm</strong>
+            </TableCell>
+            <TableCell align="center">
+              <strong>Số lượng</strong>
+            </TableCell>
+            <TableCell align="center">
+              <strong>Giá</strong>
+            </TableCell>
+            <TableCell align="center">
+              <strong>Thành tiền</strong>
+            </TableCell>
+            <TableCell align="center">
+              <strong></strong>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {cart.Products.map((product) => (
-            <tr key={product.ProductID}>
-              <td>{product.ProductName}</td>
-              <td className="quantity-cell">
+            <TableRow key={product.ProductID}>
+              <TableCell>{product.ProductName}</TableCell>
+              <TableCell align="center">
                 <IconButton
                   onClick={() =>
-                    handleDecreaseQuantity(
-                      product.ProductID,
-                      product.Quantity
-                    )
+                    handleDecreaseQuantity(product.ProductID, product.Quantity)
                   }
                 >
-                  <RemoveIcon className="quantity-icon" />
+                  <RemoveIcon />
                 </IconButton>
-                <span className="quantity">{product.Quantity}</span>
+                <span>{product.Quantity}</span>
                 <IconButton
                   onClick={() =>
                     handleIncreaseQuantity(product.ProductID, product.Quantity)
                   }
                 >
-                  <AddIcon className="quantity-icon" />
+                  <AddIcon />
                 </IconButton>
-              </td>
-              <td>{product.Price.toLocaleString()} VND</td>
-              <td>{(product.Price * product.Quantity).toLocaleString()} VND</td>
-              <td>
+              </TableCell>
+              <TableCell align="center">
+                {product.Price.toLocaleString()} VND
+              </TableCell>
+              <TableCell align="center">
+                {(product.Price * product.Quantity).toLocaleString()} VND
+              </TableCell>
+              <TableCell align="center">
                 <IconButton
                   color="error"
                   onClick={() => handleRemoveProduct(product.ProductID)}
                 >
                   <DeleteIcon />
                 </IconButton>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-      <h2 className="total-amount">
+        </TableBody>
+      </Table>
+
+      <Typography
+        variant="h6"
+        className="total-amount"
+        style={{ marginTop: "20px" }}
+      >
         Tổng cộng:{" "}
         {cart.Products.reduce(
           (total, product) => total + product.Price * product.Quantity,
           0
         ).toLocaleString()}{" "}
-        đ
-      </h2>
-      <button className="checkout-btn" onClick={handleCheckout}>
+        VND
+      </Typography>
+
+      <Button
+        variant="contained"
+        onClick={handleCheckout}
+        fullWidth
+        style={{ marginTop: "20px", backgroundColor: "#fb6f92" }}
+      >
         Thanh Toán
-      </button>
+      </Button>
     </div>
   );
 };
