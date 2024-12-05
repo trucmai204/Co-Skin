@@ -66,7 +66,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Mật khẩu không đúng." });
     }
 
-    const cart = await Cart.findOne({ UserID: user.UserID });
+   const cart = await Cart.findOne({ UserID: user.UserID });
     const userCartCount = cart.Products.reduce(
       (total, product) => total + product.Quantity,
       0

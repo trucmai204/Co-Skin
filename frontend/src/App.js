@@ -15,6 +15,7 @@ import Chatbot from "./components/Chatbot";
 import PaymentPage from "./pages/PaymentPage";
 import AccountInfoPage from './pages/AccountInfoPage';
 import EditAccountPage from "./pages/EditAccountPage";
+import OrderPage from "./pages/OrderPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -79,6 +80,7 @@ function App() {
           <Route path="/payment" element={<PaymentPage />} />{" "}
           <Route path="/account-info" element={<AccountInfoPage />} />
           <Route path="/edit-account/:id" element={<EditAccountPage />} />
+          <Route path="/orders" element={<OrderPage />} />
         </Routes>
         <Chatbot />
       </div>

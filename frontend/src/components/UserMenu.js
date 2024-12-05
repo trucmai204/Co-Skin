@@ -25,7 +25,7 @@ const UserMenu = ({ username }) => {
 
   const handleUserHistory = () => {
     // Điều hướng đến trang lịch sử người dùng
-    navigate("/userhistory");
+    navigate("/orders");
     handleMenuClose(); // Đóng menu sau khi điều hướng
   };
 

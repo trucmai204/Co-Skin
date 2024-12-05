@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 
-const OrderList = () => {
+const OrderPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
@@ -133,4 +133,4 @@ const OrderList = () => {
   );
 };
 
-export default OrderList;
+export default OrderPage;
