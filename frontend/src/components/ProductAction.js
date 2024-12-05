@@ -64,6 +64,7 @@ function ProductActions({ product, setCartCount }) {
         variant="outlined"
         sx={{ color: "#fb6f92", borderColor: "#fb6f92", marginLeft: "5rem" }}
         onClick={handleBuyNow}
+        
       >
         Mua ngay
       </Button>

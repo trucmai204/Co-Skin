@@ -4,7 +4,7 @@ import backgroundImage from '../assets/logo.png'; // Đảm bảo đã thêm ả
 
 function HomePage() {
   return (
-    <Container sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+    <Container sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between", marginTop: 10}}>
       
       {/* Phần chữ ở đầu */}
       <Box textAlign="center" sx={{ mt: 4, mb: 2 }}>

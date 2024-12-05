@@ -4,25 +4,41 @@ import { TextField, Button, Typography, Container, Box } from "@mui/material";
 import axios from "axios";
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    phone: "",
+    address: "",
+    role: "user", // Vai trò mặc định
+  });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  // Xử lý thay đổi giá trị input
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   // Xử lý đăng ký
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/api/users/add", {
-        Username: username,
-        Email: email,
-        Password: password,
+        Username: formData.username,
+        Email: formData.email,
+        Password: formData.password,
+        Phone: formData.phone,
+        Address: formData.address,
+        Role: formData.role,
       });
 
-      // Kiểm tra phản hồi từ API
       if (response.status === 201) {
-        navigate("/login"); // Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
+        navigate("/login"); // Chuyển hướng sau khi đăng ký thành công
       }
     } catch (error) {
       setError("Đã xảy ra lỗi, vui lòng thử lại!");
@@ -30,39 +46,78 @@ const RegisterPage = () => {
   };
 
   return (
-    <Container maxWidth="xs" sx={{ display: "flex", flexDirection: "column", justifyContent: "center", minHeight: "100vh" }}>
+    <Container
+      maxWidth="xs"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
       <Box textAlign="center" mb={4}>
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold", mb: 1 }}>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{ fontWeight: "bold", mb: 1 }}
+        >
           Đăng ký
         </Typography>
       </Box>
-      
+
       {/* Form đăng ký */}
       <form onSubmit={handleRegister}>
         <TextField
           label="Tên người dùng"
           fullWidth
           margin="normal"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
         />
         <TextField
           label="Email"
           type="email"
           fullWidth
           margin="normal"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
         />
         <TextField
           label="Mật khẩu"
           type="password"
           fullWidth
           margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
         />
-        
+        <TextField
+          label="Số điện thoại"
+          fullWidth
+          margin="normal"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+        />
+        <TextField
+          label="Địa chỉ"
+          fullWidth
+          margin="normal"
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+        />
+        <TextField
+          label="Vai trò"
+          fullWidth
+          margin="normal"
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
+        />
+
         {/* Hiển thị thông báo lỗi nếu có */}
         {error && (
           <Typography color="error" variant="body2" sx={{ mt: 1, mb: 2 }}>

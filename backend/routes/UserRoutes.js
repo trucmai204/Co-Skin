@@ -66,11 +66,17 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Mật khẩu không đúng." });
     }
 
-   const cart = await Cart.findOne({ UserID: user.UserID });
-    const userCartCount = cart.Products.reduce(
-      (total, product) => total + product.Quantity,
-      0
-    );
+    // Kiểm tra giỏ hàng
+    const cart = await Cart.findOne({ UserID: user.UserID });
+    let userCartCount = 0; // Mặc định là 0 nếu không có giỏ hàng
+
+    if (cart && cart.Products) {
+      userCartCount = cart.Products.reduce(
+        (total, product) => total + product.Quantity,
+        0
+      );
+    }
+
     const { UserID, Username, Role } = user;
     res.json({
       message: "Đăng nhập thành công",
@@ -84,6 +90,7 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Đã xảy ra lỗi khi đăng nhập." });
   }
 });
+
 
 // Lấy thông tin người dùng theo ID
 router.get("/getUser/:id", async (req, res) => {

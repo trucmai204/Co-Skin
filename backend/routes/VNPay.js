@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const qs = require("qs");
 const config = require("config");
 const querystring = require("querystring");
-
+const axios = require("axios");
 const router = express.Router();
 process.env.TZ = "Asia/Ho_Chi_Minh";
 
@@ -87,26 +87,36 @@ router.post("/create_payment_url", (req, res) => {
   }
 });
 // API xử lý kết quả trả về từ VNPay
-router.get('/vnpay_return', function (req, res, next) {
+router.get("/vnpay_return", function (req, res, next) {
   let vnp_Params = req.query;
-  let secureHash = vnp_Params['vnp_SecureHash'];
-  delete vnp_Params['vnp_SecureHash'];
-  delete vnp_Params['vnp_SecureHashType'];
+  let secureHash = vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHashType"];
   vnp_Params = sortObject(vnp_Params);
-  let config = require('config');
-  let tmnCode = config.get('vnp_TmnCode');
-  let secretKey = config.get('vnp_HashSecret');
-  let querystring = require('qs');
+  let config = require("config");
+  let tmnCode = config.get("vnp_TmnCode");
+  let secretKey = config.get("vnp_HashSecret");
+  let querystring = require("qs");
   let signData = querystring.stringify(vnp_Params, { encode: false });
   let crypto = require("crypto");
   let hmac = crypto.createHmac("sha512", secretKey);
-  let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
+  let signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
 
   if (secureHash === signed) {
-      let orderStatus = vnp_Params['vnp_ResponseCode'] === '00' ? 'success' : 'error';
+    let orderStatus =
+      vnp_Params["vnp_ResponseCode"] === "00" ? "success" : "error";
 
-      if (orderStatus === 'success') {
-          res.status(200).send(`
+    if (orderStatus === "success") {
+      axios.put(`http://localhost:5000/api/orders/update-status/${vnp_Params["vnp_TxnRef"]}`, {
+        status: 'Đã thanh toán'  // Giả sử bạn muốn cập nhật trạng thái thành "paid"
+    })
+    .then(response => {
+      console.log("Order status updated:", response.data);
+    })
+    .catch(error => {
+      console.error("Error updating order status:", error);
+    });
+        res.status(200).send(`
               <html>
                   <head>
                       <style>
@@ -123,10 +133,16 @@ router.get('/vnpay_return', function (req, res, next) {
                       <div class="container">
                           <h2>Payment Successful!</h2>
                           <div class="details">
-                              <p><strong>Amount:</strong> đ${vnp_Params['vnp_Amount'] / 100}</p>
-                              <p><strong>Transaction ID:</strong> ${vnp_Params['vnp_TransactionNo']}</p>
+                              <p><strong>Amount:</strong> đ${
+                                vnp_Params["vnp_Amount"] / 100
+                              }</p>
+                              <p><strong>Transaction ID:</strong> ${
+                                vnp_Params["vnp_TransactionNo"]
+                              }</p>
                               <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
-                              <p><strong>Payment Method:</strong> ${vnp_Params['vnp_BankCode'] || 'Unknown'}</p>
+                              <p><strong>Payment Method:</strong> ${
+                                vnp_Params["vnp_BankCode"] || "Unknown"
+                              }</p>
                           </div>
                       <div class="button">
                           <button onclick="goBack()">DONE</button>
@@ -147,11 +163,11 @@ router.get('/vnpay_return', function (req, res, next) {
                   </body>
               </html>
           `);
-      } else {
-          res.status(200).send('<p>Payment failed. Please try again.</p>');
-      }
+    } else {
+      res.status(200).send("<p>Payment failed. Please try again.</p>");
+    }
   } else {
-      res.status(400).send('Invalid request.');
+    res.status(400).send("Invalid request.");
   }
 });
 
